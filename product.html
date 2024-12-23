@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF.js 範例</title>
-    <!-- 引入 PDF.js 的 CDN -->
+    <title>AIm軟體產品手冊</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"></script>
     <style>
@@ -12,17 +11,19 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+        }
+        #pdf-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            height: 100vh;
-            background-color: #f0f0f0;
+            margin-top: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
         }
         #controls {
             display: flex;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-top: 10px;
         }
         button {
             margin: 0 10px;
@@ -35,56 +36,41 @@
         button:hover {
             background: #0056b3;
         }
-        #pdf-container {
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        canvas {
-            border: 1px solid #ccc;
-        }
     </style>
 </head>
 <body>
     <div id="controls">
-        <button id="prevPage">上一頁</button>
+        <button id="prevPage">Previous Page</button>
         <span id="pageInfo"></span>
-        <button id="nextPage">下一頁</button>
+        <button id="nextPage">Next Page</button>
     </div>
     <div id="pdf-container">
         <canvas id="pdfCanvas"></canvas>
     </div>
 
     <script>
-        // 取得 URL 中的 'page' 參數，預設為第 1 頁
-        const urlParams = new URLSearchParams(window.location.search);
-        const pageNumber = parseInt(urlParams.get('page')) || 1;
+        const pdfUrl = "./AIm軟體產品手冊.pdf"; // 本地 PDF 文件路徑
+        const canvas = document.getElementById("pdfCanvas");
+        const context = canvas.getContext("2d");
+        const pageInfo = document.getElementById("pageInfo");
+        const prevPageButton = document.getElementById("prevPage");
+        const nextPageButton = document.getElementById("nextPage");
 
-        // PDF 文件的 URL
-        const pdfUrl = 'AIm軟體產品手冊.pdf';
-
-        // 取得 canvas 元素和其上下文
-        const canvas = document.getElementById('pdfCanvas');
-        const context = canvas.getContext('2d');
-
-        // PDF.js 相關變數
         let pdfDoc = null;
+        let currentPage = 3; // 初始頁數
         let totalPages = 0;
 
         // 加載 PDF 文件
         pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
             pdfDoc = pdf;
             totalPages = pdf.numPages;
-            renderPage(pageNumber);
-            document.getElementById('pageInfo').textContent = `第 ${pageNumber} 頁 / 共 ${totalPages} 頁`;
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            renderPage(currentPage);
         });
 
-        // 渲染指定頁面
-        function renderPage(pageNum) {
-            pdfDoc.getPage(pageNum).then(page => {
+        // 渲染指定頁數
+        function renderPage(pageNumber) {
+            pdfDoc.getPage(pageNumber).then(page => {
                 const viewport = page.getViewport({ scale: 1.5 });
                 canvas.width = viewport.width;
                 canvas.height = viewport.height;
@@ -94,30 +80,22 @@
                     viewport: viewport,
                 };
                 page.render(renderContext);
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
             });
         }
 
         // 上一頁
-        document.getElementById('prevPage').addEventListener('click', () => {
-            if (pageNumber <= 1) return;
-            const newPageNumber = pageNumber - 1;
-            window.location.search = `?page=${newPageNumber}`;
+        prevPageButton.addEventListener("click", () => {
+            if (currentPage <= 1) return;
+            currentPage--;
+            renderPage(currentPage);
         });
 
         // 下一頁
-        document.getElementById('nextPage').addEventListener('click', () => {
-            if (pageNumber >= totalPages) return;
-            const newPageNumber = pageNumber + 1;
-            window.location.search = `?page=${newPageNumber}`;
-        });
-
-        // 監聽視窗大小變化，調整 canvas 大小以適應螢幕寬度
-        window.addEventListener('resize', () => {
-            const scale = window.innerWidth / canvas.width;
-            const viewport = pdfDoc.getPage(pageNumber).getViewport({ scale: scale });
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            renderPage(pageNumber);
+        nextPageButton.addEventListener("click", () => {
+            if (currentPage >= totalPages) return;
+            currentPage++;
+            renderPage(currentPage);
         });
     </script>
 </body>
