@@ -1,0 +1,23 @@
+.image-flip-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.flip-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0; /* 初始化為隱藏 */
+  transition: opacity 1s ease-in-out; /* 讓圖片有淡入淡出的過渡效果 */
+}
+
+/* 這是圖片首次顯示的類 */
+.fade-in {
+  opacity: 1;
+}
+
+/* 用來讓圖片淡出的類 */
+.fade-out {
+  opacity: 0;
+}

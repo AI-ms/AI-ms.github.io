@@ -59,6 +59,9 @@
     clear: both;
 }
 	</style>
+
+<link rel="stylesheet" href="css/pbox.css">
+
 	</head>
 	<body>
 		
@@ -173,12 +176,15 @@
 					產品介紹
 				</div>
 			</div>
-		</div>		
+		</div>	
+
 		<div class="fh5co-explore fh5co-explore1">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-8 col-md-push-5 animate-box">
-						<img class="img-responsive" src="images/work_1.png" alt="work">
+						<div class="image-flip-container">
+							<img id="workImage" class="flip-image fade-in" src="images/work_1.png" alt="work">
+						</div>
 						
 					</div>
 					<div class="col-md-4 col-md-pull-8 animate-box">
@@ -191,12 +197,12 @@
 								<li><i class="icon-check2"></i>燈號提示及篩檢可快速確認各科室條文目前狀況</li>
 								<li><i class="icon-check2"></i>多樣式文件編輯器提供網頁超連結及插入圖片/影片等圖文功能</li>
 							</ul>
-							<!--<p><a class="btn btn-primary btn-lg popup-vimeo btn-video" href="https://vimeo.com/channels/staffpicks/93951774"><i class="icon-play"></i> Watch Video</a></p>-->
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+
 
 		<div class="fh5co-explore">
 			<div class="container">
@@ -225,6 +231,37 @@
 				</div>
 			</div>
 		</div>
+
+<br/><br/><br/>
+		<div class="fh5co-explore fh5co-explore1">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-push-5 animate-box">
+						<div class="image-flip-container">
+							<img class="flip-image fade-in" src="images/work_3_0.png" alt="work">
+							<img class="flip-image fade-in" src="images/work_3_2.png" alt="work">
+						</div>
+						
+					</div>
+					<div class="col-md-4 col-md-pull-8 animate-box">
+						<div class="mt">
+							<h3>醫療品質指標稽核系統</h3>
+							<p>醫療品質指標稽核系統之簡介及特色</p>
+							<ul class="list-nav">
+								<li><i class="icon-check2"></i>智能稽核工具：自動化檢查指標達成情況，減少手動操作。</li>
+								<li><i class="icon-check2"></i>數據圖表呈現：以視覺化方式即時呈現稽核結果。</li>
+								<li><i class="icon-check2"></i>稽核異常提醒：指標未達成時發送警告通知，及時採取行動。</li>
+								<li><i class="icon-check2"></i>多層次權限設置：保護敏感資料並控制訪問。</li>
+								<li><i class="icon-check2"></i>稽核紀錄生成：快速生成專業稽核紀錄報表，提升工作效率。</li>
+
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 	</div>
 	
 	<div id="fh5co-project">
@@ -531,7 +568,7 @@
 			<div class="row copyright">
 				<div class="col-md-12 text-center">
 					<p>
-						<small class="block">&copy; 2024 Arthur Intelligence medical Co., Ltd. All Rights Reserved.</small> 
+						<small class="block">&copy; 2025 Arthur Intelligence medical Co., Ltd. All Rights Reserved.</small> 
 						<!--<small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FreeHTML5.co</a> Demo Images: <a href="http://unsplash.co/" target="_blank">Unsplash</a></small>-->
 					</p>
 					<p>
@@ -545,8 +582,8 @@
 						<div class="fh5co-social-icons">
 							<a href="https://lin.ee/GuxC8iH"><img src="images/line.png" width="5%" height="5%"/></a>
 							<a href="https://www.facebook.com/profile.php?id=61571260220996&locale=zh_TW"><img src="images/facebook.png" width="5%" height="5%"/></a>
-							<a href="#"><img src="images/linkedin.png" width="5%" height="5%"/></a>
-							<a href="#"><img src="images/instagram.png" width="5%" height="5%"/></a>
+							<a href="https://linkedin.com/company/%E8%8B%A5%E6%B0%B4%E6%99%BA%E9%86%AB%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8"><img src="images/linkedin.png" width="5%" height="5%"/></a>
+							<!-- <a href="#"><img src="images/instagram.png" width="5%" height="5%"/></a> -->
 						</div>
 					</p>
 				</div>
@@ -579,6 +616,42 @@
 	<script src="js/magnific-popup-options.js"></script>
 	<!-- Main -->
 	<script src="js/main.js"></script>
+
+
+	<script>
+//圖片翻轉
+
+let currentImage = 1;
+const imageElement = document.getElementById("workImage");
+
+function switchImage() {
+    // 淡出當前圖片
+    imageElement.classList.add("fade-out");
+
+    setTimeout(() => {
+        // 切換圖片
+        if (currentImage === 1) {
+            imageElement.src = "images/work_1_2.png";
+            currentImage = 2;
+        } else {
+            imageElement.src = "images/work_1.png";
+            currentImage = 1;
+        }
+
+        // 移除淡出類並強制添加淡入類
+        imageElement.classList.remove("fade-out");
+        imageElement.classList.add("fade-in");
+
+    }, 1000);  // 淡出動畫持續時間為 1 秒
+
+}
+
+// 每 5 秒切換一次圖片
+setInterval(() => {
+    switchImage();
+}, 5000);  // 停留時間為 5 秒
+
+	</script>
 
 	</body>
 </html>
