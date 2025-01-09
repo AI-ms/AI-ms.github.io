@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SPC P Chart和U Chart控制圖</title>
+    <!-- 引入 ECharts 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+</head>
+<body>
+    <!-- 為 ECharts 準備兩個具備大小（寬高）的 DOM -->
+    <div id="pChart" style="width: 800px;height:400px;"></div>
+    <div id="uChart" style="width: 800px;height:400px;"></div>
+    <script type="text/javascript">
+        // 模擬P圖數據
+        var pData = [
+            {sample: 100, defects: 5},
+            {sample: 120, defects: 8},
+            {sample: 110, defects: 6},
+            {sample: 130, defects: 9},
+            {sample: 100, defects: 4}
+        ];
+
+        // 模擬U圖數據
+        var uData = [
+            {sample: 100, defects: 10},
+            {sample: 120, defects: 15},
+            {sample: 110, defects: 12},
+            {sample: 130, defects: 18},
+            {sample: 100, defects: 9}
+        ];
+
+        // P圖計算
+        var pValues = pData.map(d => d.defects / d.sample);
+        var pBar = pValues.reduce((a, b) => a + b) / pValues.length;
+        var nBar = pData.reduce((a, b) => a + b.sample, 0) / pData.length;
+        var pUCL = pBar + 3 * Math.sqrt(pBar * (1 - pBar) / nBar);
+        var pLCL = Math.max(0, pBar - 3 * Math.sqrt(pBar * (1 - pBar) / nBar));
+
+        // U圖計算
+        var uValues = uData.map(d => d.defects / d.sample);
+        var uBar = uValues.reduce((a, b) => a + b) / uValues.length;
+        var uUCL = uBar + 3 * Math.sqrt(uBar / nBar);
+        var uLCL = Math.max(0, uBar - 3 * Math.sqrt(uBar / nBar));
+
+        // P圖配置
+        var pOption = {
+            title: { text: 'SPC P Chart控制圖' },
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['P值', 'UCL', 'CL', 'LCL'] },
+            xAxis: { type: 'category', data: ['1', '2', '3', '4', '5'] },
+            yAxis: { type: 'value' },
+            series: [
+                {
+                    name: 'P值',
+                    type: 'line',
+                    data: pValues,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    },
+                    lineStyle: { width: 2 }
+                },
+                {
+                    name: 'UCL',
+                    type: 'line',
+                    data: new Array(5).fill(pUCL),
+                    lineStyle: {type: 'dashed', width: 1},
+                    itemStyle: {color: '#FF4500'}
+                },
+                {
+                    name: 'CL',
+                    type: 'line',
+                    data: new Array(5).fill(pBar),
+                    lineStyle: {type: 'dashed', width: 1},
+                    itemStyle: {color: '#008000'}
+                },
+                {
+                    name: 'LCL',
+                    type: 'line',
+                    data: new Array(5).fill(pLCL),
+                    lineStyle: {type: 'dashed', width: 1},
+                    itemStyle: {color: '#FF4500'}
+                }
+            ]
+        };
+
+        // U圖配置
+        var uOption = {
+            title: { text: 'SPC U Chart控制圖' },
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['U值', 'UCL', 'CL', 'LCL'] },
+            xAxis: { type: 'category', data: ['1', '2', '3', '4', '5'] },
+            yAxis: { type: 'value' },
+            series: [
+                {
+                    name: 'U值',
+                    type: 'line',
+                    data: uValues,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    },
+                    lineStyle: { width: 2 }
+                },
+                {
+                    name: 'UCL',
+                    type: 'line',
+                    data: new Array(5).fill(uUCL),
+                    lineStyle: {type: 'dashed', width: 1},
+                    itemStyle: {color: '#FF4500'}
+                },
+                {
+                    name: 'CL',
+                    type: 'line',
+                    data: new Array(5).fill(uBar),
+                    lineStyle: {type: 'dashed', width: 1},
+                    itemStyle: {color: '#008000'}
+                },
+                {
+                    name: 'LCL',
+                    type: 'line',
+                    data: new Array(5).fill(uLCL),
+                    lineStyle: {type: 'dashed', width: 1},
+                    itemStyle: {color: '#FF4500'}
+                }
+            ]
+        };
+
+        // 初始化圖表並設置選項
+        var pChart = echarts.init(document.getElementById('pChart'));
+        pChart.setOption(pOption);
+
+        var uChart = echarts.init(document.getElementById('uChart'));
+        uChart.setOption(uOption);
+    </script>
+</body>
+</html>
